@@ -1,3 +1,9 @@
+// This work is licensed under the Creative Commons
+// Attribution-NonCommercial-ShareAlike 3.0 United States License.
+// To view a copy of this license, visit
+// http://creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to
+// Creative Commons, 444 Castro Street, Suite 900, Mountain View,
+// California, 94041, USA.
 package com.flexamphetamine
 {
 import flash.utils.ByteArray;
@@ -9,6 +15,8 @@ import org.igorcosta.hacks.SWF;
  * MXMLC-comiled SWF was built.
  * 
  * Set the swfBytes property to switch which SWF is used.
+ *
+ * @author Jono Spiro
  */
 public final class BuildDecayChronograph extends ColorChronometer
 {

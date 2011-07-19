@@ -1,3 +1,9 @@
+// This work is licensed under the Creative Commons
+// Attribution-NonCommercial-ShareAlike 3.0 United States License.
+// To view a copy of this license, visit
+// http://creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to
+// Creative Commons, 444 Castro Street, Suite 900, Mountain View,
+// California, 94041, USA.
 package com.flexamphetamine
 {
 import flash.display.Sprite;
@@ -11,6 +17,8 @@ import flash.text.TextFieldAutoSize;
 /**
  * Add this to the stage to track how long it's been since a given time.
  * Color changes as you drift further from the start time. 
+ *
+ * @author Jono Spiro
  */
 public class ColorChronometer extends Sprite
 {
