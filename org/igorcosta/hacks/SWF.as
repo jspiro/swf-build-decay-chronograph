@@ -12,19 +12,12 @@ package org.igorcosta.hacks
 
 	public class SWF
 	{
-		public function SWF()
-		{
-		}
-
     ///////////////////////////////////////////////////////////////////////////
     // Returns compilation date of current module
     public static function readCompilationDate(serialNumber: ByteArray = null): Date
     {
       const compilationDate: Date = new Date;
       const DATETIME_OFFSET: uint = 18;
-
-      if (serialNumber == null)
-        serialNumber = readSerialNumber();
 
       /* example of filled SWF_SERIALNUMBER structure
       struct SWF_SERIALNUMBER
@@ -55,19 +48,16 @@ package org.igorcosta.hacks
 
     ///////////////////////////////////////////////////////////////////////////
     // Returns contents of Adobe SerialNumber SWF tag
-    public static function readSerialNumber(): ByteArray
+    public static function readSerialNumber(src:ByteArray): ByteArray
     {
       const TAG_SERIAL_NUMBER: uint = 0x29;
-      return findAndReadTagBody(TAG_SERIAL_NUMBER);
+      return findAndReadTagBody(src, TAG_SERIAL_NUMBER);
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Returns the tag body if it is possible
-    public static function findAndReadTagBody(theTagCode: uint): ByteArray
+    public static function findAndReadTagBody(src:ByteArray, theTagCode: uint): ByteArray
     {
-      // getting direst access to unpacked SWF file
-      const src: ByteArray = LoaderInfo.getLoaderInfoByDefinition(SWF).bytes;
-
       /*
       SWF File Header
       Field      Type  Offset   Comment
