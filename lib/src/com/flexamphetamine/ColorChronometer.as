@@ -180,8 +180,8 @@ public class ColorChronometer extends Sprite
 		labelTF.y = countdownTF.y + gutter + countdownTF.textHeight;
 		
 		if (autoSize) {
-			_width  = (Math.max(labelTF.textWidth, countdownTF.textWidth) + (6 * gutter));
-			_height = (labelTF.y + labelTF.textHeight + (4 * gutter));
+			_width  = Math.max(labelTF.textWidth, countdownTF.textWidth) + (6 * gutter);
+			_height = labelTF.y + labelTF.textHeight + (4 * gutter);
 		}
 		
 		// draw background
