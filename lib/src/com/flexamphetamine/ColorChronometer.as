@@ -8,10 +8,12 @@ package com.flexamphetamine
 {
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.events.TimerEvent;
 import flash.text.Font;
 import flash.text.StyleSheet;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
+import flash.utils.Timer;
 
 /**
  * Add this to the stage to track how long it's been since a given time.
@@ -32,6 +34,7 @@ public class ColorChronometer extends Sprite
 	private var colors:Vector.<uint>;
 	
 	private var delay:int;
+	private var timer:Timer;
 	
 	private var autoSize:Boolean;
 	private var _width:int;
@@ -55,6 +58,9 @@ public class ColorChronometer extends Sprite
 		this.delay    = expires * 1000;
 		this.label    = label;
 		this.autoSize = autoSize;
+		
+		timer = new Timer(1000);
+		timer.addEventListener(TimerEvent.TIMER, onTimer);
 		
 		// defaults
 		_width  = 70;
@@ -139,16 +145,19 @@ public class ColorChronometer extends Sprite
 	protected function onAdded(... whatever):void {
 		removeEventListener(Event.ADDED, onAdded);
 		addEventListener(Event.REMOVED, onRemoved, false, 0, true);
-		addEventListener(Event.ENTER_FRAME, onEnterFrame, false, 0, true);
+		timer.start();
+		
+		// kick off the first render
+		onTimer();
 	}
 	
 	protected function onRemoved(... whatever):void {
 		removeEventListener(Event.REMOVED, onRemoved);
-		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		addEventListener(Event.ADDED, onAdded, false, 0, true);
+		timer.stop();
 	}
 	
-	protected function onEnterFrame(... whatever):void {
+	protected function onTimer(e:TimerEvent=null):void {
 		if (!_startTime) return;
 		
 		const elapsed:int = ((new Date()).getTime() - _startTime.getTime());
@@ -166,23 +175,23 @@ public class ColorChronometer extends Sprite
 			((m && !h) ? (m % 60) + ' MIN' + ((m > 1) ? 'S' : '') : '') +
 			(!m ? (s % 60) + ' SEC' : '') +
 			'</span>';
-		// floor for pixel fonts
-		countdownTF.x = Math.floor((width - countdownTF.textWidth) / 2);
-		countdownTF.y = gutter;
 		
 		labelTF.htmlText =
 			'<span class="label">' +
 			// upper case for pixel fonts
 			_label.toUpperCase() +
 			'</span>';
-		// floor for pixel fonts
-		labelTF.x = Math.floor((width - labelTF.textWidth) / 2);
-		labelTF.y = countdownTF.y + gutter + countdownTF.textHeight;
 		
 		if (autoSize) {
-			_width  = Math.max(labelTF.textWidth, countdownTF.textWidth) + (6 * gutter);
-			_height = labelTF.y + labelTF.textHeight + (4 * gutter);
+			_width  = Math.max(labelTF.width, countdownTF.width) + (2 * gutter);
+			_height = gutter + countdownTF.textHeight + gutter + labelTF.height + gutter;
 		}
+		
+		countdownTF.x = Math.round((_width - countdownTF.textWidth) / 2);
+		countdownTF.y = gutter;
+		
+		labelTF.x = Math.round((_width - labelTF.textWidth) / 2);
+		labelTF.y = countdownTF.y + gutter + countdownTF.textHeight;
 		
 		// draw background
 		const colorsIndex:Number = ((colors.length - 1) * progress);
@@ -192,7 +201,7 @@ public class ColorChronometer extends Sprite
 		graphics.clear();
 		graphics.beginFill(c);
 		graphics.lineStyle(gutter, bgColor, 1, true);
-		graphics.drawRoundRect(0, 0, _width, _height, 16);
+		graphics.drawRect(0, 0, _width, _height);
 	}
 	
 	/** Interpolate a color between two colors; assumes RGB */
