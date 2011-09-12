@@ -1,5 +1,5 @@
 /* This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 United States License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/us/ or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA. */
 /* glitch mood theme */
 .style { gutter:2; bgColor:#34312C; colors:[#6CB745,#7FBD42,#8FBF42,#B8C034,#D8C228,#ECBE1F,#EDA028,#EB682C,#DC4A2D,#CB202E]; }
-.time  { leading:-2px; font-size:13px; font-weight:bold; color:#FFFFFF; text-align:center; font-family:"helvetica neue, helvetica, arial, sans-serif"; }
-.label { leading:-2px; font-size:10px; font-weight:bold; color:#34312C; text-align:center; font-family:"helvetica neue, helvetica, arial, sans-serif"; }
+.time  { font-size:16px; color:#FFFFFF; text-align:center; font-family:"04B-24Embed"; }
+.label { font-size:8px; font-normal:normal; color:#34312C; text-align:center; font-family:"04B-24Embed"; }

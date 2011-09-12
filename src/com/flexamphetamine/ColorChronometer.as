@@ -8,8 +8,7 @@ package com.flexamphetamine
 {
 import flash.display.Sprite;
 import flash.events.Event;
-import flash.text.AntiAliasType;
-import flash.text.GridFitType;
+import flash.text.Font;
 import flash.text.StyleSheet;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
@@ -22,6 +21,9 @@ import flash.text.TextFieldAutoSize;
  */
 public class ColorChronometer extends Sprite
 {
+	[Embed(source='../../../fonts/04b-24/04B-24.ttf', fontName="04B-24Embed", mimeType="application/x-font")]
+	private static const F04B_24__Embed:Class;
+	
 	[Embed(source="chronometer.css", mimeType="application/octet-stream")]
 	private static const css:Class;
 	
@@ -35,7 +37,8 @@ public class ColorChronometer extends Sprite
 	private var _width:int;
 	private var _height:int;
 	
-	private var tf:TextField;
+	private var countdownTF:TextField;
+	private var labelTF:TextField;
 	
 	private var _startTime:Date;
 	private var _label:String;
@@ -44,8 +47,10 @@ public class ColorChronometer extends Sprite
 	 * @expires (in seconds) expiration time elapsed since start
 	 */
 	public function ColorChronometer(startTime:Date, expires:uint,
-	                                 label:String = '', autoSize:Boolean = true)
+									 label:String = '', autoSize:Boolean = true)
 	{
+		Font.registerFont(F04B_24__Embed);
+		
 		this._startTime = startTime;
 		this.delay    = expires * 1000;
 		this.label    = label;
@@ -72,16 +77,29 @@ public class ColorChronometer extends Sprite
 		}
 		
 		// prepare textfield
-		tf = new TextField();
-		tf.styleSheet = styles;
-		tf.wordWrap = false;
-		tf.multiline = true;
-		tf.selectable = false;
-		tf.mouseWheelEnabled = false;
-		tf.autoSize = TextFieldAutoSize.LEFT;
-		tf.gridFitType = GridFitType.SUBPIXEL;
-		tf.antiAliasType = AntiAliasType.ADVANCED;
-		addChild(tf);
+		labelTF = new TextField();
+		labelTF.styleSheet = styles;
+		labelTF.embedFonts = true;
+		labelTF.wordWrap = false;
+		labelTF.selectable = false;
+		labelTF.mouseWheelEnabled = false;
+		labelTF.autoSize = TextFieldAutoSize.LEFT;
+		// not for pixel fonts
+		//labelTF.gridFitType = GridFitType.SUBPIXEL;
+		//labelTF.antiAliasType = AntiAliasType.ADVANCED;
+		addChild(labelTF);
+		
+		countdownTF = new TextField();
+		countdownTF.styleSheet = styles;
+		countdownTF.embedFonts = true;
+		countdownTF.wordWrap = false;
+		countdownTF.selectable = false;
+		countdownTF.mouseWheelEnabled = false;
+		countdownTF.autoSize = TextFieldAutoSize.LEFT;
+		// not for pixel fonts
+		//countdownTF.gridFitType = GridFitType.SUBPIXEL;
+		//countdownTF.antiAliasType = AntiAliasType.ADVANCED;
+		addChild(countdownTF);
 		
 		addEventListener(Event.ADDED, onAdded, false, 0, true);
 	}
@@ -141,23 +159,29 @@ public class ColorChronometer extends Sprite
 		const m:int = Math.floor(s / 60);
 		const h:int = Math.floor(m / 60);
 		const d:int = Math.floor(h / 24);
-		tf.htmlText =
+		countdownTF.htmlText =
 			'<span class="time">' +
-			(d ? d + 'd ' : '') +
-			((h && !d) ? (h % 24) + 'h ' : '') +
-			((m && !h) ? (m % 60) + 'm ' : '') +
-			(!m ? (s % 60) + 's' : '') +
-			'</span>' +
-			'<br/>' +
-			'<span class="label">' +
-			_label +
+			(d ? d + ' DAY' + ((d > 1) ? 'S' : '') : '') +
+			((h && !d) ? (h % 24) + ' HOUR' + ((h > 1) ? 'S' : '') : '') +
+			((m && !h) ? (m % 60) + ' MIN' + ((m > 1) ? 'S' : '') : '') +
+			(!m ? (s % 60) + ' SEC' : '') +
 			'</span>';
-		tf.x = (width  - tf.width)  / 2;
-		tf.y = (height - tf.height) / 2;
+		// floor for pixel fonts
+		countdownTF.x = Math.floor((width - countdownTF.textWidth) / 2);
+		countdownTF.y = gutter;
+		
+		labelTF.htmlText =
+			'<span class="label">' +
+			// upper case for pixel fonts
+			_label.toUpperCase() +
+			'</span>';
+		// floor for pixel fonts
+		labelTF.x = Math.floor((width - labelTF.textWidth) / 2);
+		labelTF.y = countdownTF.y + gutter + countdownTF.textHeight;
 		
 		if (autoSize) {
-			_width  = (tf.width  + (4 * gutter));
-			_height = (tf.height + (4 * gutter));
+			_width  = (Math.max(labelTF.textWidth, countdownTF.textWidth) + (6 * gutter));
+			_height = (labelTF.y + labelTF.textHeight + (4 * gutter));
 		}
 		
 		// draw background
