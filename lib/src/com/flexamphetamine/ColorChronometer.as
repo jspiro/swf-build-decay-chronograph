@@ -154,7 +154,7 @@ public class ColorChronometer extends Sprite
 	protected function onTimer(e:TimerEvent=null):void {
 		if (!_startTime) return;
 		
-		const elapsed:int = ((new Date()).getTime() - _startTime.getTime());
+		const elapsed:Number = ((new Date()).getTime() - _startTime.getTime());
 		const progress:Number = Math.min(1, (elapsed / delay));
 		
 		// update label
